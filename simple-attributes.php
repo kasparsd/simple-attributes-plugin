@@ -3,7 +3,7 @@
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.6
+ Version: 1.6.1
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes
@@ -55,11 +55,9 @@ function cpt_atts_git_updater() {
 	// A modified version of https://github.com/jkudish/WordPress-GitHub-Plugin-Updater
 	require_once('updater/updater.php');
 
-	define('WP_GITHUB_FORCE_UPDATE', true);
-
 	$config = array(
-		'slug' => 'simple-attributes/simple-attributes.php',
-		'proper_folder_name' => 'simple-attributes',
+		'slug' => basename(dirname(__FILE__)) . '/' . basename(__FILE__),
+		'proper_folder_name' => basename(dirname(__FILE__)),
 		'api_url' => 'https://api.github.com/repos/kasparsd/simple-attributes-plugin',
 		'raw_url' => 'https://raw.github.com/kasparsd/simple-attributes-plugin/master',
 		'github_url' => 'https://github.com/kasparsd/simple-attributes-plugin',
