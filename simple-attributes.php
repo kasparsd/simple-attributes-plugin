@@ -73,6 +73,17 @@ function cpt_atts_git_updater() {
 }
 
 
+// Disable sslverify for HTTPS plugin updates from github
+add_action('http_request_args', 'cpt_disable_sslverify', 10, 2);
+
+function cpt_disable_sslverify($args, $url) {
+	if (strstr($url, 'simple-attributes'))
+		$args['sslverify'] = false;
+	
+	return $args;
+}
+
+
 add_action('post_edit_form_tag', 'add_upload_support_to_post_form');
 
 function add_upload_support_to_post_form($form) {
