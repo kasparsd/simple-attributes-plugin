@@ -267,17 +267,17 @@ class WPGitHubUpdater {
 		if ( $args->slug != $this->config['slug'] )
 			return false;
 
-	    $response->slug = $this->config['slug'];
-	    $response->plugin_name  = $this->config['plugin_name'];
-	    $response->version = $this->config['new_version'];
-	    $response->author = $this->config['author'];
-	    $response->homepage = $this->config['homepage'];
-	    $response->requires = $this->config['requires'];
-	    $response->tested = $this->config['tested'];
-	    $response->downloaded   = 0;
-	    $response->last_updated = $this->config['last_updated'];
-	    $response->sections = array( 'description' => $this->config['description'] );
-	    $response->download_link = $this->config['zip_url'];
+		$response->slug = $this->config['slug'];
+		$response->plugin_name  = $this->config['plugin_name'];
+		$response->version = $this->config['new_version'];
+		$response->author = $this->config['author'];
+		$response->homepage = $this->config['homepage'];
+		$response->requires = $this->config['requires'];
+		$response->tested = $this->config['tested'];
+		$response->downloaded   = 0;
+		$response->last_updated = $this->config['last_updated'];
+		$response->sections = array( 'description' => $this->config['description'] );
+		$response->download_link = $this->config['zip_url'];
 
 		return $response;
 	}
