@@ -55,7 +55,7 @@ function cpt_atts_git_updater() {
 	// A modified version of https://github.com/jkudish/WordPress-GitHub-Plugin-Updater
 	require_once('updater/updater.php');
 
-	// define('WP_GITHUB_FORCE_UPDATE', true);
+	define('WP_GITHUB_FORCE_UPDATE', true);
 
 	$config = array(
 		'slug' => 'simple-attributes/simple-attributes.php',
@@ -63,7 +63,7 @@ function cpt_atts_git_updater() {
 		'api_url' => 'https://api.github.com/repos/kasparsd/simple-attributes-plugin',
 		'raw_url' => 'https://raw.github.com/kasparsd/simple-attributes-plugin/master',
 		'github_url' => 'https://github.com/kasparsd/simple-attributes-plugin',
-		'zip_url' => 'https://github.com/kasparsd/simple-attributes-plugin/zipball/master',
+		'zip_url' => 'http://github.com/kasparsd/simple-attributes-plugin/zipball/master',
 		'sslverify' => false,
 		'requires' => '3.0',
 		'tested' => '3.4',

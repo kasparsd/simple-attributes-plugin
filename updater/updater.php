@@ -248,7 +248,6 @@ class WPGitHubUpdater {
 			if ( false !== $response )
 				$transient->response[ $this->config['slug'] ] = $response;
 		}
-		print_r($transient);
 		
 		return $transient;
 	}
