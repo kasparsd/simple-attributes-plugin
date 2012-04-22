@@ -58,7 +58,7 @@ function cpt_atts_git_updater() {
 	define('WP_GITHUB_FORCE_UPDATE', true);
 
 	$config = array(
-		'slug' => 'simple-attributes/simple-attributes.php',
+		'slug' => basename(dirname(__FILE__)) . '/simple-attributes.php',
 		'proper_folder_name' => 'simple-attributes',
 		'api_url' => 'https://api.github.com/repos/kasparsd/simple-attributes-plugin',
 		'raw_url' => 'https://raw.github.com/kasparsd/simple-attributes-plugin/master',
