@@ -1,17 +1,13 @@
 <?php
-
 /*
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.5
+ Version: 1.6
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes
  */
-
-//error_reporting(E_ALL);
-//ini_set('display_errors', 'On');
 
 
 add_action('admin_menu', 'cpt_atts_submenu_page');
@@ -33,12 +29,47 @@ function cpt_atts_submenu_page() {
 }
 
 
+// Enable support for this plugin as a symlink
+add_filter('plugins_url', 'plugins_url_symlink_fix', 10, 3);
+
+function plugins_url_symlink_fix($url, $path, $plugin) {
+	if (strstr($plugin, basename(__FILE__)))
+		return str_replace(dirname(__FILE__), '/' . basename(dirname($plugin)), $url);
+
+	return $url;
+}
+
+
 add_action('admin_enqueue_scripts', 'cpt_atts_scripts');
 
 function cpt_atts_scripts() {
 	wp_enqueue_style('thickbox');
 	wp_enqueue_style('simple-attributes-css', plugins_url('/sap-admin-css.css', __FILE__));
 	wp_enqueue_script('simple-attributes-js', plugins_url('/sap-admin-js.js', __FILE__), array('jquery', 'jquery-ui-sortable', 'media-upload'));
+}
+
+
+add_action('admin_init', 'cpt_atts_git_updater');
+
+function cpt_atts_git_updater() {
+	// A modified version of https://github.com/jkudish/WordPress-GitHub-Plugin-Updater
+	require_once('updater/updater.php');
+
+	// define('WP_GITHUB_FORCE_UPDATE', true);
+
+	$config = array(
+		'slug' => 'simple-attributes/simple-attributes.php',
+		'proper_folder_name' => 'simple-attributes',
+		'api_url' => 'https://api.github.com/repos/kasparsd/simple-attributes-plugin',
+		'raw_url' => 'https://raw.github.com/kasparsd/simple-attributes-plugin/master',
+		'github_url' => 'https://github.com/kasparsd/simple-attributes-plugin',
+		'zip_url' => 'https://github.com/kasparsd/simple-attributes-plugin/zipball/master',
+		'sslverify' => false,
+		'requires' => '3.0',
+		'tested' => '3.4',
+	);
+
+	new WPGitHubUpdater($config);
 }
 
 
