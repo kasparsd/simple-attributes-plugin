@@ -254,7 +254,7 @@ function cpt_atts_admin() {
 				<textarea><?php unset($cpt_opts['cpt']); echo serialize($cpt_opts); ?></textarea>
 			</div>
 
-			<pre style="clear:both;float:left;"><small><?php print_r($cpt_opts); ?></small></pre>
+			<pre style="hidden"><small><?php print_r($cpt_opts); ?></small></pre>
 		</form>
 	</div>
 
@@ -370,10 +370,11 @@ function cpt_atts_advanced_metabox($post, $atts) {
 		<textarea name="sap-import"></textarea>
 	</div>
 
+	<pre class="hidden">
+		<small><?php print_r(array_merge(array('cpt_atts' => $attr_values), $atts)); ?></small>
+	</pre>
+	
 	<?php
-	print '<pre>';
-	print_r(array_merge(array('cpt_atts' => $attr_values), $atts));
-	print '</pre>';
 }
 
 
