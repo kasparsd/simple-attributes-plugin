@@ -20,6 +20,7 @@
 .sap-input-text input { display:block; width:97%; }
 .cpt_atts_delete { float:right; margin:0.3em 0 -10em -10em; }
 .cpt_atts .cpt_tools, .cpt_atts .cpt_tools td { margin:0; padding:0; margin-bottom:-100em; }
+.import-export textarea { width:100%; }
 
 .cpt-choose-file { float:right; margin:0.7em 1em 0 1em; }
 .sap-file-tools { margin:0; }
