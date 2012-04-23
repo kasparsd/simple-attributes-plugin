@@ -3,7 +3,7 @@
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.6.1
+ Version: 1.6.2
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes
@@ -373,7 +373,7 @@ function cpt_atts_advanced_metabox($post, $atts) {
 	<pre class="hidden">
 		<small><?php print_r(array_merge(array('cpt_atts' => $attr_values), $atts)); ?></small>
 	</pre>
-	
+
 	<?php
 }
 
