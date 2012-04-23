@@ -13,7 +13,7 @@ The easiest way to add custom content fields to all posts, pages and custom post
 
 Think of an employee post type which needs employee's email, phone, position and bio.
 
-~Current Version:1.6.2~
+~Current Version:1.6.3~
 
 
 == User Guide ==
