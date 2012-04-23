@@ -136,7 +136,7 @@ jQuery(document).ready(function($) {
 		
 		// Get the new preview
 		$.post(ajaxurl, {
-			action: "sap_get_file_preview", 
+			action: 'sap_get_file_preview', 
 			file_id: $file_id,
 			_ajax_nonce: $('input[name="_wpnonce"]').val()
 		}, function(str) {
@@ -144,4 +144,54 @@ jQuery(document).ready(function($) {
 		});		
 	}
 
+	/*
+		Post Search
+	*/
+
+	$('.cpt-search-post').keypress(function() {
+		if ($(this).val().length < 3)
+			return;
+
+		var $search_input = this;
+		var $rel = $($search_input).attr('rel');
+		var $results = '';
+		//var $frame = 
+
+		var query = {
+			action: 'wp-link-ajax',
+			search: $(this).val(),
+			_ajax_linking_nonce: $('input[name="cpt-post-search-nonce"]').last().val()
+		}; 
+
+		$.post(ajaxurl, query, function(result) {
+			$(result).each(function(i, val) {
+				$results += '<li id="'+ val.ID +'"><small>'+ val.info +'</small> '+ val.title +'</li>';
+			});
+			$results = '<ul class="sap-post-search-results">' + $results + '</ul>';
+			$results = $($results).css({
+				position: 'absolute',
+				left: $($search_input).position().left + 'px'
+			});
+			$($search_input).after($results);
+		}, 'json');
+
+	}).submit(function() {
+		return false;
+	});
+
+	$('.sap-post-search-results li').live('click', function() {
+		var $frame = $('.sap-input-post .frame').clone().removeClass('frame');
+		$('input', $frame).val($(this).attr('id')).before($(this).text());
+		$('#' + $(this).parent().siblings('input').attr('rel')).prepend($frame).hide().fadeIn('slow');
+		$(this).parent().remove();
+	});
+
+	$('.sap-posts-list a.remove').live('click', function() {
+		$(this).parent().fadeOut('fast', function() {
+			$(this).remove();
+		});
+		return false;
+	});
+
 });
+
