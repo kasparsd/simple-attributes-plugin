@@ -3,7 +3,7 @@
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.6.3
+ Version: 1.6.4
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes
@@ -95,9 +95,6 @@ function cpt_atts_admin() {
 	$post_type_id = $_GET['post_type'];
 	$post_type = get_post_type_object($post_type_id);
 
-	// if ($post_type == false)
-	//	return; // This should never happen
-
 	// Get options
 	$option_name = 'cpt_atts_' . $post_type_id;
 	$cpt_opts = get_option($option_name);
@@ -120,8 +117,10 @@ function cpt_atts_admin() {
 		'dropdown' => __('Dropdown'),
 		'checkboxes' => __('Checkboxes'),
 		'radioboxes' => __('Radioboxes'),
+		'taxonomy' => __('Taxonomies'),
+		//'post' => __('Posts'),
 		'image' => __('Image'),
-		'file' => __('File')
+		//'file' => __('File')
 	);
 
 	?>
@@ -222,6 +221,42 @@ function cpt_atts_admin() {
 							?>
 						</ul>
 					</div>
+
+					<div class="sap-adv-type-options sap-type-<?php echo $i; ?> sap-type-<?php echo $i; ?>-taxonomy">
+						<label>
+							<?php _e('Select Taxonomy:') ?>
+							<select name="<?php echo $input_prefix; ?>[taxonomy]">
+								<option value=""></option>
+								<?php 
+									$taxonomies = get_taxonomies(array('public' => true), 'objects');
+									foreach ($taxonomies as $name => $value) :
+										$selected = '';
+										if ($name == $atts['taxonomy'])
+											$selected = 'selected="selected"';
+									?>
+									<option value="<?php esc_attr_e($name); ?>" <?php echo $selected; ?>><?php esc_attr_e($value->labels->name); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</label>
+					</div>
+
+					<div class="sap-adv-type-options sap-type-<?php echo $i; ?> sap-type-<?php echo $i; ?>-post">
+						<label>
+							<?php _e('Select Post Type:') ?>
+							<select name="<?php echo $input_prefix; ?>[post]">
+								<option value=""></option>
+								<?php 
+									$post_types = get_post_types(array('public' => true), 'objects');
+									foreach ($post_types as $name => $value) :
+										$selected = '';
+										if ($name == $atts['post'])
+											$selected = 'selected="selected"';
+									?>
+									<option value="<?php esc_attr_e($name); ?>" <?php echo $selected; ?>><?php esc_attr_e($value->labels->name); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</label>
+					</div>										
 
 				</fieldset>
 				</li>
@@ -393,10 +428,6 @@ function cpt_atts_meta_box($post, $atts) {
 	$group_id = $atts['args']['_id'];
 	$is_multiple = $atts['args']['multiple'];
 
-	// Remove the dummy variable which was saved
-	//if (isset($attr_values[$group_id]['%%%']))
-	//	unset($attr_values[$group_id]['%%%']);
-
 	if (!is_array($attr_values[$group_id]) || empty($attr_values[$group_id]))
 		$attr_values[$group_id] = array(array());
 
@@ -475,38 +506,102 @@ function cpt_metabox_text($atts, $values, $input_attributes) {
 add_action('sap_metabox-image', 'cpt_metabox_image', 10, 3);
 
 function cpt_metabox_image($atts, $meta, $input_attributes) {
+
+	$image_attr = wp_get_attachment_image_src($meta['file'], 'large');
+
 	?>
-		<?php //if (is_array($meta) && is_numeric($meta['file'])) :
-			$image_attr = wp_get_attachment_image_src($meta['file'], 'large');
+
+	<a href="<?php echo $image_attr[0]; ?>" id="<?php esc_attr_e($input_attributes['id']); ?>-image"><?php echo wp_get_attachment_image($meta['file'], 'sap_thumb') ?></a>
+
+	<input type="hidden" id="<?php esc_attr_e($input_attributes['id']); ?>" name="<?php esc_attr_e($input_attributes['name']); ?>[file]" value="<?php if (is_array($meta)) esc_attr_e($meta['file']); ?>" />
+
+	<ul class="sap-file-tools">
+		<li class="upload">
+			<label>
+				<strong>Upload New Image</strong>
+				<input type="file" name="<?php esc_attr_e($input_attributes['name']); ?>[file]" />
+			</label>
+		</li>
+		<li class="choose">
+			<?php 
+				printf(__('or <a href="%s" rel="%s" title="Choose from the existing files" class="sap-choose-existing">choose from existing</a>'), 
+					esc_url(get_upload_iframe_src('library') . '&tab=library'), 
+					esc_attr($input_attributes['id'])); 
 			?>
-			<a href="<?php echo $image_attr[0]; ?>" id="<?php esc_attr_e($input_attributes['id']); ?>-image"><?php echo wp_get_attachment_image($meta['file'], 'sap_thumb') ?></a>
-			<!--<label>
-				<strong>Caption</strong> 
-				<input type="text" name="<?php echo $prefix; ?>[title]" value="<?php esc_attr_e($meta['title']); ?>" />
-			</label>-->
+		</li>
+		<li class="remove">
+			<a id="sap-remove-file" href="#<?php esc_attr_e($input_attributes['id']); ?>"><?php _e('Remove'); ?></a>
+		</li>
+	</ul>
 
-		<?php // endif; ?>
+	<?php
+}
 
-		<input type="hidden" id="<?php esc_attr_e($input_attributes['id']); ?>" name="<?php esc_attr_e($input_attributes['name']); ?>[file]" value="<?php if (is_array($meta)) esc_attr_e($meta['file']); ?>" />
 
-		<ul class="sap-file-tools">
-			<li class="upload">
-				<label>
-					<strong>Upload New Image</strong>
-					<input type="file" name="<?php esc_attr_e($input_attributes['name']); ?>[file]" />
-				</label>
-			</li>
-			<li class="choose">
-				<?php 
-					printf(__('or <a href="%s" rel="%s" title="Choose from the existing files" class="sap-choose-existing">choose from existing</a>'), 
-						esc_url(get_upload_iframe_src('library') . '&tab=library'), 
-						esc_attr($input_attributes['id'])); 
-				?>
-			</li>
-			<li class="remove">
-				<a id="sap-remove-file" href="#<?php esc_attr_e($input_attributes['id']); ?>"><?php _e('Remove'); ?></a>
-			</li>
-		</ul>
+add_action('sap_metabox-taxonomy', 'cpt_metabox_taxonomy', 10, 3);
+
+function cpt_metabox_taxonomy($atts, $values, $input_attributes) {
+	?>
+	<ul>
+		<?php wp_terms_checklist($post_id,
+		 	array(
+				'taxonomy' => $atts['taxonomy'],
+				'selected_cats' => $values,
+				'walker' => new Walker_SAP($input_attributes['name'])
+	  		));
+		?>
+	</ul>
+	<?php
+}
+
+class Walker_SAP extends Walker {
+	var $tree_type = 'category';
+	var $db_fields = array ('parent' => 'parent', 'id' => 'term_id'); //TODO: decouple this
+	var $input_name = '';
+
+	function Walker_SAP($input_name) {
+		$this->input_name = $input_name;
+	}
+
+	function start_lvl( &$output, $depth = 0, $args = array() ) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "$indent<ul class='children'>\n";
+	}
+
+	function end_lvl( &$output, $depth = 0, $args = array() ) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "$indent</ul>\n";
+	}
+
+	function start_el( &$output, $category, $depth, $args, $id = 0 ) {
+		extract($args);
+		$class = in_array( $category->term_id, $popular_cats ) ? ' class="popular-category"' : '';
+		$output .= "\n<li $class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="'. $this->input_name .'[]" ' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . disabled( empty( $args['disabled'] ), false, false ) . ' /> ' . esc_html( apply_filters('the_category', $category->name )) . '</label>';
+	}
+
+	function end_el( &$output, $category, $depth = 0, $args = array() ) {
+		$output .= "</li>\n";
+	}
+}
+
+
+add_action('sap_metabox-post', 'cpt_metabox_post', 10, 3);
+
+function cpt_metabox_post($atts, $values, $input_attributes) {
+	// TODO: Move this into footer, so that it gets called only once
+	$post_search_nounce = wp_create_nonce('internal-linking');
+	?>
+
+	<label>
+		<?php esc_attr_e('Search:'); ?>
+		<input type="text" value="" class="cpt-search-post" rel="<?php esc_attr_e($input_attributes['id']); ?>" />
+	</label>
+
+	<input type="hidden" name="cpt-post-search-nonce" value="<?php esc_attr_e($post_search_nounce); ?>" />
+
+	<ul class="sap-posts-list" id="<?php esc_attr_e($input_attributes['id']); ?>">
+		<li class="frame"> <input type="hidden" name="<?php esc_attr_e($input_attributes['name']); ?>[]" value="" /> <a href="#remove" class="remove"><?php _e('Remove'); ?></a></li>
+	</ul>
 
 	<?php
 }
@@ -517,6 +612,7 @@ add_action('wp_ajax_sap_get_file_preview', 'sap_get_file_preview');
 function sap_get_file_preview() {
 	die(wp_get_attachment_image($_POST['file_id'], 'sap_thumb'));
 }
+
 
 add_action('sap_metabox-radioboxes', 'cpt_metabox_radioboxes', 10, 3);
 
@@ -551,11 +647,12 @@ function cpt_metabox_dropdown($atts, $meta, $input_attributes) {
 					$selected = 'selected="selected"';
 
 		?>
-			<option value="<?php echo $name; ?>" <?php echo $selected; ?>><?php esc_attr_e($value['name']); ?></option>
+			<option value="<?php esc_attr_e($name); ?>" <?php echo $selected; ?>><?php esc_attr_e($value['name']); ?></option>
 		<?php endforeach; ?>
 	</select>
 	<?php
 }
+
 
 add_action('sap_metabox-checkboxes', 'cpt_metabox_checkboxes', 10, 3);
 
@@ -577,6 +674,7 @@ function cpt_metabox_checkboxes($atts, $meta, $input_attributes) {
 	<?php 
 	endforeach;
 }
+
 
 add_action('save_post', 'cpt_atts_save_meta_box');
 
