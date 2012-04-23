@@ -370,25 +370,25 @@ function cpt_atts_meta_boxes_init() {
 
 			// Add every group box
 			add_meta_box( 
-		   		'cpt_atts_meta_box_' . $post_type_name . $group_id,
-		    	$atts['name'],
-		    	'cpt_atts_meta_box',
-		    	$post_type_name,
-		    	'normal',
-		    	'high',
-		    	$atts
+				'cpt_atts_meta_box_' . $post_type_name . $group_id,
+				$atts['name'],
+				'cpt_atts_meta_box',
+				$post_type_name,
+				'normal',
+				'high',
+				$atts
 			);
     	}
 
     	// Add the Advanced Tools box
     	add_meta_box( 
-	   		'cpt_atts_advanced_metabox_init',
-	    	'Simple Attribute Tools',
-	    	'cpt_atts_advanced_metabox',
-	    	$post_type_name,
-	    	'normal',
-	    	null,
-	    	$atts
+			'cpt_atts_advanced_metabox_init',
+			'Simple Attribute Tools',
+			'cpt_atts_advanced_metabox',
+			$post_type_name,
+			'normal',
+			null,
+			$atts
 		);
     }	
 }
