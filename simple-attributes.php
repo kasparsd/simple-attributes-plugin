@@ -44,8 +44,8 @@ add_action('admin_enqueue_scripts', 'cpt_atts_scripts');
 
 function cpt_atts_scripts() {
 	wp_enqueue_style('thickbox');
-	wp_enqueue_style('simple-attributes-css', plugins_url('/sap-admin-css.css', __FILE__));
-	wp_enqueue_script('simple-attributes-js', plugins_url('/sap-admin-js.js', __FILE__), array('jquery', 'jquery-ui-sortable', 'media-upload'));
+	wp_enqueue_style('simple-attributes-css', plugins_url('/sap-admin.css', __FILE__));
+	wp_enqueue_script('simple-attributes-js', plugins_url('/sap-admin.js', __FILE__), array('jquery', 'jquery-ui-sortable', 'media-upload'));
 }
 
 
@@ -254,7 +254,7 @@ function cpt_atts_admin() {
 				<textarea><?php unset($cpt_opts['cpt']); echo serialize($cpt_opts); ?></textarea>
 			</div>
 
-			<pre style="hidden"><small><?php print_r($cpt_opts); ?></small></pre>
+			<pre class="hidden"><small><?php print_r($cpt_opts); ?></small></pre>
 		</form>
 	</div>
 
