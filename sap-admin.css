@@ -4,7 +4,7 @@
 
 .cpt_atts { width:100%; padding:0 1em; margin:1em 0; border:1px solid #ddd; -webkit-border-radius:4px; } 
 .cpt_atts tbody { width:100%; }
-.cpt_atts tr td { vertical-align:top; border-bottom:1px solid #eee; margin:0.3em 0; padding:0.5em 0; }
+.cpt_atts tr td { vertical-align:top; border-bottom:1px solid #ddd; margin:0.3em 0; padding:0.5em 0; }
 .cpt_atts tr:last-child td { border:none; }
 .cpt_atts .sap-title-column label { font-weight:bold; }
 .cpt_atts .sap-help { margin:0; padding:0 0 0.75em 0; display:block; font-style:italic; color:#999; }
@@ -21,6 +21,7 @@
 .cpt_atts_delete { float:right; margin:0.3em 0 -10em -10em; }
 .cpt_atts .cpt_tools, .cpt_atts .cpt_tools td { margin:0; padding:0; margin-bottom:-100em; }
 .import-export textarea { width:100%; }
+.cpt_atts .frame { display:none; }
 
 .cpt-choose-file { float:right; margin:0.7em 1em 0 1em; }
 .sap-file-tools { margin:0; }
@@ -32,6 +33,20 @@
 .sap-file-tools .remove a { color:#999; }
 .sap-file-tools .remove a:hover { color:red; }
 
+.sap-post-search-results { max-height:20em; overflow:scroll; max-width:300px; z-index:20; background:#fff; border:1px solid #ccc; margin-top:0.5em; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; }
+.sap-post-search-results li { margin:0; padding:0.5em; border-top:1px solid #eee; }
+.sap-post-search-results small { font-size:inherit; color:#666; margin-right:0.5em; }
+.sap-post-search-results li:hover { background:#eee; }
+
+.sap-posts-list { max-width:500px; padding:0; margin:1em 0.5em; background:#fff; border:1px solid #ddd; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; }
+.sap-posts-list li { margin:0; padding:0.5em; border-top:1px solid #ddd; }
+.sap-posts-list li:first-child { border:none; }
+.sap-posts-list li a { float:right; color:#999; }
+
+.sap-input-taxonomy ul { max-height:20em; overflow:scroll; max-width:500px; margin:0.5em; padding:0; background:#fff; border:1px solid #ddd; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; }
+.sap-input-taxonomy li ul { max-height:auto; overflow:none; max-width:auto; }
+.sap-input-taxonomy li { margin:0; padding:0.5em; border-top:1px solid #ddd; }
+.sap-input-taxonomy li:first-child { border:none; }
 
 /* 
 	SAP settings admin 
