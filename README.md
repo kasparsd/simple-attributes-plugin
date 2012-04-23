@@ -1,6 +1,5 @@
 Simple Attributes Plugin for WordPress
 ======================================
-~Current Version:1.6.1~
+~Current Version:1.6.2~
 
-
-Simple Attributes for WordPress
+This file will be removed with 1.6.3.
