@@ -13,8 +13,6 @@ The easiest way to add custom content fields to all posts, pages and custom post
 
 Think of an employee post type which needs employee's email, phone, position and bio.
 
-~Current Version:1.6.3~
-
 
 == User Guide ==
 
@@ -28,6 +26,12 @@ This section will server as a simple reference to all the action and filters cal
 
 
 == Changelog ==
+
+~Current Version:1.6.4~
+
+= 1.6.4 =
+* Attribute settings now save on the first save.
+* Added group delete button.
 
 = 1.6.2 =
 * Hide the advanced SAP information on all forms.
