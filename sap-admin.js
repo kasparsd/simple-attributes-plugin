@@ -21,6 +21,10 @@ jQuery(document).ready(function($) {
 		return false;
 	});
 
+	$('.remove-group').live('click', function() {
+		$($(this).attr('href')).remove();
+	});
+
 	$('.add-attr').live('click', function() {
 		var $new_item = $itemframe.wrap('<div>').parent().html();
 		
