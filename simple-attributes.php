@@ -143,23 +143,25 @@ function cpt_atts_admin() {
 					$group_prefix = $option_name . '[groups]['. $group .']';
 				?>
 
-				<?php if ($group == '%group%') : ?>
-					<li class="group groupframe">
+				<?php if ($group == '%group%') : $attrs['_id'] = '%group%'; ?>
+					<li class="group groupframe" id="sap-group-%group%">
 						<div class="header">
 							<label><?php _e('Group Name'); ?>: <input type="text" name="<?php echo $group_prefix; ?>[name]" value="" /></label>
-							<label>Group ID: <input type="text" class="sap-group" name="<?php echo $group_prefix; ?>[_id]" value="%group%" /></label>
+							<label>Group ID: <input type="text" class="sap-group" name="<?php echo $group_prefix; ?>[_id]" value="" /></label>
 							<label><input type="checkbox" name="<?php echo $group_prefix; ?>[multiple]" value="1" /> <?php _e('Multiple'); ?></label>
 						</div>
 						<ul>
+
 				<?php elseif ($prev_group !== $group) : ?>
 						
-					<li class="group">
+					<li class="group" id="sap-group-<?php esc_attr_e($attrs['_id']); ?>">
 						<div class="header">
 							<label>Group Name: <input type="text" name="<?php esc_attr_e($group_prefix); ?>[name]" value="<?php esc_attr_e($attrs['name']); ?>" /></label>
 							<label>Group ID: <input type="text" class="sap-group" name="<?php esc_attr_e($group_prefix); ?>[_id]" value="<?php esc_attr_e($attrs['_id']); ?>" /></label>
 							<label><input type="checkbox" name="<?php echo $group_prefix; ?>[multiple]" value="1" <?php if ($attrs['multiple']) : ?>checked="checked"<?php endif; ?> /> <?php _e('Multiple'); ?></label>
 						</div>
 						<ul>
+
 				<?php endif; ?>
 
 				<?php
@@ -269,7 +271,8 @@ function cpt_atts_admin() {
 					</ul>
 					<p class="add-attr-wrap">
 						<a class="add-attr button" href="#add-attr"><?php _e('Add Attribute'); ?></a>
-						<input type="submit" class="button-primary" value="<?php esc_attr_e('Save All'); ?>" />
+						<input type="submit" class="button-primary" value="<?php esc_attr_e('Save'); ?>" />
+						<a class="remove-group" href="#sap-group-<?php esc_attr_e($attrs['_id']); ?>"><?php _e('Remove Group'); ?></a>
 					</p>
 				</li>
 
@@ -278,7 +281,7 @@ function cpt_atts_admin() {
 
 			<p class="submit">
 				<a id="add-group" class="button" href="#add-group"><?php _e('Add Group'); ?></a>
-				<!--<input type="submit" class="button-primary" value="<?php esc_attr_e('Save'); ?>" />-->
+				<input type="submit" class="button-primary" value="<?php esc_attr_e('Save'); ?>" />
 			</p>
 
 			<div class="advanced">
@@ -302,11 +305,15 @@ function cpt_atts_admin_validate($input) {
 	if (!empty($input['import']))
 		return unserialize($input['import']);
 
+	// There is only a frame, no groups
 	if (empty($input['groups']))
 		return $input;
 
 	// Move all _id to array keys, create assoc array
 	$input['groups'] = create_attr_assoc($input['groups']);
+
+	if (empty($input['groups']))
+		return $input;
 
 	foreach ($input['groups'] as $group_id => $atts)
 		if (!empty($atts['atts']))
