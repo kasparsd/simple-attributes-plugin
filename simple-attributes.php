@@ -3,7 +3,7 @@
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.6.4
+ Version: 1.6.5
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes
@@ -118,7 +118,7 @@ function cpt_atts_admin() {
 		'checkboxes' => __('Checkboxes'),
 		'radioboxes' => __('Radioboxes'),
 		'taxonomy' => __('Taxonomies'),
-		//'post' => __('Posts'),
+		'post' => __('Posts'),
 		'image' => __('Image'),
 		//'file' => __('File')
 	);
@@ -597,17 +597,26 @@ add_action('sap_metabox-post', 'cpt_metabox_post', 10, 3);
 function cpt_metabox_post($atts, $values, $input_attributes) {
 	// TODO: Move this into footer, so that it gets called only once
 	$post_search_nounce = wp_create_nonce('internal-linking');
+	// Exclude empty values
+	$values = array_filter($values);
 	?>
 
 	<label>
 		<?php esc_attr_e('Search:'); ?>
 		<input type="text" value="" class="cpt-search-post" rel="<?php esc_attr_e($input_attributes['id']); ?>" />
+		<input type="hidden" name="cpt-post-type" value="<?php esc_attr_e($atts['post']); ?>" />
 	</label>
 
 	<input type="hidden" name="cpt-post-search-nonce" value="<?php esc_attr_e($post_search_nounce); ?>" />
 
 	<ul class="sap-posts-list" id="<?php esc_attr_e($input_attributes['id']); ?>">
-		<li class="frame"> <input type="hidden" name="<?php esc_attr_e($input_attributes['name']); ?>[]" value="" /> <a href="#remove" class="remove"><?php _e('Remove'); ?></a></li>
+		<?php $template = '<input type="hidden" name="'. esc_attr($input_attributes['name']) .'[]" value="%s" /> %s <a href="#remove" class="remove">%s</a>'; ?>
+		
+		<?php foreach ($values as $i => $post_id) : $title = get_the_title($post_id); ?>
+			<li><?php printf($template, $post_id, $title, __('Remove')); ?></li>
+		<?php endforeach; ?>
+
+		<li class="frame"><?php printf($template, null, null, __('Remove')); ?></li>
 	</ul>
 
 	<?php
@@ -619,6 +628,52 @@ add_action('wp_ajax_sap_get_file_preview', 'sap_get_file_preview');
 function sap_get_file_preview() {
 	die(wp_get_attachment_image($_POST['file_id'], 'sap_thumb'));
 }
+
+
+add_action('wp_ajax_sap_get_posts', 'sap_get_posts_ajax');
+
+function sap_get_posts_ajax() {
+	check_ajax_referer( 'internal-linking', '_ajax_linking_nonce' );
+
+	$query = array(
+		'suppress_filters' => true,
+		'update_post_term_cache' => false,
+		'update_post_meta_cache' => false,
+		'post_status' => 'publish',
+		'order' => 'DESC',
+		'orderby' => 'post_date',
+		'posts_per_page' => 10,
+	);
+
+	if ( isset( $_POST['search'] ) )
+		$query['s'] = stripslashes( $_POST['search'] );
+
+	if ( isset( $_POST['post_type'] ) )
+		$query['post_type'] = stripslashes( $_POST['post_type'] );
+
+	// Do main query.
+	$get_posts = new WP_Query;
+	$posts = $get_posts->query( $query );
+
+	// Check if any posts were found.
+	if ( ! $get_posts->post_count )
+		return false;
+
+	// Build results.
+	$results = array();
+	foreach ( $posts as $post ) {
+		$results[] = array(
+			'ID' => $post->ID,
+			'title' => trim( esc_html( strip_tags( get_the_title( $post ) ) ) )
+		);
+	}
+
+	if ( ! isset( $results ) )
+		die( '0' );
+
+	die(json_encode( $results ));
+}
+
 
 
 add_action('sap_metabox-radioboxes', 'cpt_metabox_radioboxes', 10, 3);

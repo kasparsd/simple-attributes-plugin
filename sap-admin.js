@@ -159,17 +159,17 @@ jQuery(document).ready(function($) {
 		var $search_input = this;
 		var $rel = $($search_input).attr('rel');
 		var $results = '';
-		//var $frame = 
 
 		var query = {
-			action: 'wp-link-ajax',
+			action: 'sap_get_posts',
+			post_type: $(this).siblings('input[name="cpt-post-type"]').val(),
 			search: $(this).val(),
 			_ajax_linking_nonce: $('input[name="cpt-post-search-nonce"]').last().val()
 		}; 
 
 		$.post(ajaxurl, query, function(result) {
 			$(result).each(function(i, val) {
-				$results += '<li id="'+ val.ID +'"><small>'+ val.info +'</small> '+ val.title +'</li>';
+				$results += '<li id="'+ val.ID +'">'+ val.title +'</li>';
 			});
 			$results = '<ul class="sap-post-search-results">' + $results + '</ul>';
 			$results = $($results).css({

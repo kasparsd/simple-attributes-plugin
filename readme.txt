@@ -27,7 +27,10 @@ This section will server as a simple reference to all the action and filters cal
 
 == Changelog ==
 
-~Current Version:1.6.4~
+~Current Version:1.6.5~
+
+= 1.6.5 =
+* Enable Post attribute type
 
 = 1.6.4 =
 * Attribute settings now save on the first save.
