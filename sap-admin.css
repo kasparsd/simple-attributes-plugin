@@ -82,3 +82,6 @@
 #sap-atts .add-attr-wrap { width:100%; float:left; text-align:center; display:block; clear:both; }
 #sap-atts .button-primary { float:right; margin-right:1em; }
 #sap-atts .add-attr { display:inline-block; }
+#sap-atts .remove-group { color:#999; float:left; margin-top:0.3em; margin-left:1em; }
+#sap-atts .remove-group:hover { color:red; }
+
