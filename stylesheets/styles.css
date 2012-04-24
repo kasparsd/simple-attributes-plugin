@@ -1,10 +1,7 @@
-@import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
-
 body {
   padding:50px;
-  font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color:#777;
-  font-weight:300;
+  font:14px/1.4 Helvetica, Arial, sans-serif;
+  color:#444;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -17,11 +14,11 @@ p, ul, ol, table, pre, dl {
 }
 
 h1, h2, h3 {
-  line-height:1.1;
+  line-height:1.2;
 }
 
 h1 {
-  font-size:28px;
+  font-size:1.7em;
 }
 
 h2 {
