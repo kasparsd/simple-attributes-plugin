@@ -700,6 +700,7 @@ add_action('sap_metabox-dropdown', 'cpt_metabox_dropdown', 10, 3);
 function cpt_metabox_dropdown($atts, $meta, $input_attributes) {
 	$input_id = $atts['_id'];
 	?>
+
 	<select name="<?php esc_attr_e($input_attributes['name']); ?>">
 		<option value=""><?php _e('Options'); ?></option>
 		<?php 
@@ -712,6 +713,7 @@ function cpt_metabox_dropdown($atts, $meta, $input_attributes) {
 			<option value="<?php esc_attr_e($name); ?>" <?php echo $selected; ?>><?php esc_attr_e($value['name']); ?></option>
 		<?php endforeach; ?>
 	</select>
+
 	<?php
 }
 
@@ -880,6 +882,14 @@ function get_simple_attribute_label($id, $args = array()) {
 }
 
 
+add_action('spa_dump', 'get_spa_dump');
+
+function get_spa_dump() {
+	$spa = get_simple_attribute();
+	echo '<pre><small>' . print_r($spa, true) . '</small></pre>';
+}
+
+
 add_action('spa_list', 'get_spa_list');
 
 function get_spa_list($vars) {
@@ -921,16 +931,19 @@ function get_spa_list($vars) {
 	echo apply_filters('spa_list_echo', $list, $spa);
 }
 
+
 add_filter('spa_list_item_template', 'spa_list_item_template_default');
 function spa_list_item_template_default() {
 	return '<li class="spa-list-%1$s"><strong>%2$s</strong> <span class="spa-list-value">%3$s</span></li>';
 }
+
 
 add_filter('spa_list-text', 'default_spa_template_text', 10, 4);
 function default_spa_template_text($value, $spa, $i, $a) {
 	$template = apply_filters('spa_list_item_template', '');
 	return sprintf($template, $i, $spa[$i]['name'], $a);
 }
+
 
 add_filter('spa_list-image', 'default_spa_template_image', 10, 4);
 function default_spa_template_image($value, $spa, $i, $a) {
