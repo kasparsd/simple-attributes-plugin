@@ -480,6 +480,9 @@ function cpt_atts_meta_box($post, $atts) {
 			</td>
 			<td class="sap-input-column sap-input-<?php echo $attr['_type'] ?>">
 				<?php
+					if (!isset($meta[$i]) || empty($meta[$i]))
+						$meta[$i] = array();
+					
 					do_action('sap_metabox-' . $attr['_type'], $attr, $meta[$i], $input_attributes); 
 				?>
 			</td>
