@@ -3,7 +3,7 @@
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.6.5
+ Version: 1.6.6
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes
@@ -826,10 +826,26 @@ function sap_store_file_uploads($atts, $post_id) {
 }
 
 
-function get_simple_attribute($id = false) {
+function get_simple_attribute($id = false, $post_data = array()) {
 	global $post;
+
+	if (!empty($post_data)) {
+		$post = new stdClass;
+
+		if (!isset($post_data['ID']))
+			$post->ID = $post_data['ID'];
+
+		if (isset($post_data['post_type']))
+			$post->post_type = $post_data['post_type'];
+		elseif (isset($post->ID))
+			$post = get_post($post->ID);
+	}
 	
 	$spa_settings = get_option('cpt_atts_' . $post->post_type);
+
+	if (!isset($post->ID))
+		return array('settings' => $spa_settings);
+
 	$cpt_atts = get_post_meta($post->ID, 'cpt_atts', true);
 	
 	$return = array();
@@ -868,7 +884,7 @@ function print_simple_attribute_value($id, $args = array()) {
 add_filter('get_spa_value', 'get_simple_attribute_value', 10, 2);
 
 function get_simple_attribute_value($id, $args = array()) {
-	$attr = get_simple_attribute($id);
+	$attr = get_simple_attribute($id, $args);
 	return apply_filters('get_spa_value-' . $attr['settings']['_type'], $attr, $args);
 }
 
