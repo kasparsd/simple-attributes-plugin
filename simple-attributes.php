@@ -3,7 +3,7 @@
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.6.7
+ Version: 1.6.8
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes
@@ -831,14 +831,12 @@ function get_simple_attribute($id = false, $post_data = array()) {
 
 	if (!empty($post_data)) {
 		$post = new stdClass;
-
-		if (!isset($post_data['ID']))
+		if (isset($post_data['ID']) && !isset($post_data['post_type'])) {
+			$post = get_post($post_data['ID']);
+		} elseif (isset($post_data['ID']) && isset($post_data['post_type'])) {
 			$post->ID = $post_data['ID'];
-
-		if (isset($post_data['post_type']))
 			$post->post_type = $post_data['post_type'];
-		elseif (isset($post->ID))
-			$post = get_post($post->ID);
+		}
 	}
 	
 	$spa_settings = get_option('cpt_atts_' . $post->post_type);
