@@ -3,7 +3,7 @@
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.6.6
+ Version: 1.6.7
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes
@@ -481,7 +481,7 @@ function cpt_atts_meta_box($post, $atts) {
 			<td class="sap-input-column sap-input-<?php echo $attr['_type'] ?>">
 				<?php
 					if (!isset($meta[$i]) || empty($meta[$i]))
-						$meta[$i] = array();
+						$meta[$i] = '';
 					
 					do_action('sap_metabox-' . $attr['_type'], $attr, $meta[$i], $input_attributes); 
 				?>
