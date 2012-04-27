@@ -95,6 +95,9 @@ function cpt_atts_admin() {
 	$post_type_id = $_GET['post_type'];
 	$post_type = get_post_type_object($post_type_id);
 
+	if (empty($post_type_id))
+		$post_type_id = 'post';
+
 	// Get options
 	$option_name = 'cpt_atts_' . $post_type_id;
 	$cpt_opts = get_option($option_name);
@@ -132,6 +135,7 @@ function cpt_atts_admin() {
 		<form id="sap-atts" method="post" action="options.php">
 
 			<?php settings_fields($option_name); ?>
+
 			<input type="hidden" name="<?php echo $option_name; ?>[cpt]" value="<?php echo $option_name; ?>" />
 
 			<ul>
