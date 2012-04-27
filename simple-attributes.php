@@ -3,7 +3,7 @@
  Plugin Name: Simple Attributes
  Plugin URI: 
  Description: Add simple attributes to posts and custom post types
- Version: 1.6.8
+ Version: 1.6.9
  Author: Kaspars Dambis
  Author URI: http://konstruktors.com
  Text Domain: simple-attributes

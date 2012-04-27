@@ -27,7 +27,10 @@ This section will server as a simple reference to all the action and filters cal
 
 == Changelog ==
 
-~Current Version:1.6.6~
+~Current Version:1.6.9~
+
+= 1.6.9 =
+* Add support for Simple Attributes to built-in posts.
 
 = 1.6.6 =
 * Enable support for custom post data to be supplied to get_simple_attributes()
