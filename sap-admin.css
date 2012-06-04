@@ -2,7 +2,7 @@
 	SAP on post pages 
 */
 
-.cpt_atts { width:100%; padding:0 1em; margin:1em 0; border:1px solid #ddd; -webkit-border-radius:4px; } 
+.cpt_atts { width:100%; padding:0 1em; margin:1em 0; border:1px solid #ddd; -webkit-border-radius:4px; position:relative; } 
 .cpt_atts tbody { width:100%; }
 .cpt_atts tr td { vertical-align:top; border-bottom:1px solid #ddd; margin:0.3em 0; padding:0.5em 0; }
 .cpt_atts tr:last-child td { border:none; }
@@ -18,20 +18,35 @@
 .cpt_atts .sap-title-column { max-width:11em; }
 .cpt_atts.frame { display:none; }
 .sap-input-text input { display:block; width:97%; }
+.sap-input-textarea textarea { display:block; width:97%; height:10em; }
+.sap-input-location .latlong { float:left; width:100%; clear:both;  }
+.sap-input-location .latlong label { float:left; margin-right:1em; }
+.sap-input-location .location-search { margin-top:0.25em; }
+.sap-input-location .location-map { width:98%; height:20em; background:#ccc; border:1px solid #ccc; }
 .cpt_atts_delete { float:right; margin:0.3em 0 -10em -10em; }
 .cpt_atts .cpt_tools, .cpt_atts .cpt_tools td { margin:0; padding:0; margin-bottom:-100em; }
 .import-export textarea { width:100%; }
 .cpt_atts .frame { display:none; }
+.cpt_atts .dragthis { display:block; width:30px; height:30px; position:absolute; left:0; top:0; }
+.cpt_atts .dragthis:hover { cursor:move; }
 
 .cpt-choose-file { float:right; margin:0.7em 1em 0 1em; }
 .sap-file-tools { margin:0; }
-.sap-file-tools li { display:inline-block; }
+.sap-file-tools li { display:inline-block; float:left; }
 .sap-file-tools li a { padding:0.3em; }
 .sap-file-tools .choose { float:left; margin-top:0.6em; }
 .sap-file-tools .upload { float:left; }
+.sap-file-tools .upload label { display:inline; }
+.sap-file-tools .upload label strong { display:none; }
+.sap-file-tools .file-meta { width:100%; }
+.sap-file-tools .file-meta label { float:left; width:97%; clear:both; }
+.sap-file-tools .file-meta label strong { float:left; width:20%; }
+.sap-file-tools .file-meta label input { float:right; width:75%; }
 .sap-file-tools .remove { float:right; margin:0.6em 0 -10em -10em; }
 .sap-file-tools .remove a { color:#999; }
 .sap-file-tools .remove a:hover { color:red; }
+
+.cpt_atts input.searching { background:url('images/ajax-loading.gif') no-repeat 97% 50%; }
 
 .sap-post-search-results { max-height:20em; overflow:scroll; max-width:300px; z-index:20; background:#fff; border:1px solid #ccc; margin-top:0.5em; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; }
 .sap-post-search-results li { margin:0; padding:0.5em; border-top:1px solid #eee; }

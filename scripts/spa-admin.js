@@ -105,6 +105,12 @@ jQuery(document).ready(function($) {
 		return false;
 	});
 
+	$('.postbox .inside').sortable({
+		items: '.sap-sortable',
+		axis: 'y',
+		handle: '.dragthis'
+	});
+
 
 	/* 
 		File Uploads 
@@ -153,12 +159,14 @@ jQuery(document).ready(function($) {
 	*/
 
 	$('.cpt-search-post').keypress(function() {
-		if ($(this).val().length < 3)
+		if ($(this).val().length < 2)
 			return;
 
 		var $search_input = this;
 		var $rel = $($search_input).attr('rel');
 		var $results = '';
+
+		$($search_input).addClass('searching');
 
 		var query = {
 			action: 'sap_get_posts',
@@ -169,14 +177,21 @@ jQuery(document).ready(function($) {
 
 		$.post(ajaxurl, query, function(result) {
 			$(result).each(function(i, val) {
-				$results += '<li id="'+ val.ID +'">'+ val.title +'</li>';
+				$results += '<li id="'+ val.ID +'" rel="'+ $rel +'">'+ val.title +'</li>';
 			});
-			$results = '<ul class="sap-post-search-results">' + $results + '</ul>';
-			$results = $($results).css({
-				position: 'absolute',
-				left: $($search_input).position().left + 'px'
-			});
-			$($search_input).after($results);
+			
+			if ( $($search_input).siblings('.sap-post-search-results').length > 0 ) {
+				$($search_input).siblings('.sap-post-search-results').html($results);
+			} else {
+				$results = '<ul class="sap-post-search-results">' + $results + '</ul>';
+				$results = $($results).css({
+					position: 'absolute',
+					left: $($search_input).position().left + 'px'
+				});
+				$($search_input).after($results);	
+			}
+
+			$($search_input).removeClass('searching');
 		}, 'json');
 
 	}).submit(function() {
@@ -184,7 +199,8 @@ jQuery(document).ready(function($) {
 	});
 
 	$('.sap-post-search-results li').live('click', function() {
-		var $frame = $('.sap-input-post .frame').clone().removeClass('frame');
+		var $rel = $(this).attr('rel');
+		var $frame = $('#'+ $rel +' .frame').clone().removeClass('frame');
 		$('input', $frame).val($(this).attr('id')).before($(this).text());
 		$('#' + $(this).parent().siblings('input').attr('rel')).prepend($frame).hide().fadeIn('slow');
 		$(this).parent().remove();
@@ -195,6 +211,31 @@ jQuery(document).ready(function($) {
 			$(this).remove();
 		});
 		return false;
+	});
+
+
+	/*
+		Location / map
+	*/
+
+	$('.location-map').gmap().bind('init', function(ev, map) {
+		var $thismap = this;
+		var $map_options = {
+			'draggable': true
+		}
+
+		var $lat = $('.lat', $(this).siblings('.latlong')).val();
+		var $lng = $('.lng', $(this).siblings('.latlong')).val();
+
+		if ( $lat && $lng ) {
+			var $pos = new google.maps.LatLng($lat, $lng);
+			$.extend($map_options, { position: $pos, center: $pos });
+		}
+
+		$(this).gmap('addMarker', $map_options).dragend( function(event) {
+			$('.lat', $($thismap).siblings('.latlong')).val( event.latLng.lat() );
+			$('.lng', $($thismap).siblings('.latlong')).val( event.latLng.lng() );
+		});
 	});
 
 });
