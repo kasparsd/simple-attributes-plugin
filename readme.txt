@@ -27,7 +27,14 @@ This section will server as a simple reference to all the action and filters cal
 
 == Changelog ==
 
-~Current Version:1.6.9~
+~Current Version:1.7.2~
+
+= 1.7.2 =
+* Add location, textarea and file attribute. 
+* Don't translate attribute IDs.
+* Add support for multiple or single taxonomy selection. 
+* Make multiples sortable on the post edit screen. 
+* Add title, alt and description to all image attributes.
 
 = 1.6.9 =
 * Add support for Simple Attributes to built-in posts.
