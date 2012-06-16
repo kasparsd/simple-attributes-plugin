@@ -1,0 +1,102 @@
+/* 
+	SAP on post pages 
+*/
+
+.cpt_atts { width:100%; padding:0 1em; margin:1em 0; border:1px solid #ddd; -webkit-border-radius:4px; position:relative; } 
+.cpt_atts tbody { width:100%; }
+.cpt_atts tr td { vertical-align:top; border-bottom:1px solid #ddd; margin:0.3em 0; padding:0.5em 0; }
+.cpt_atts tr:last-child td { border:none; }
+.cpt_atts .sap-title-column label { font-weight:bold; }
+.cpt_atts .sap-help { margin:0; padding:0 0 0.75em 0; display:block; font-style:italic; color:#999; }
+.cpt_atts td img { float:left; vertical-align:top; margin:0 -100em 0 -80px; background:#fff; border:0.5em solid transparent; -webkit-border-radius:4px; }
+.cpt_atts td.sap-input-image { padding-left:80px; }
+.cpt_atts td label { display:block; padding-top:0.5em; }
+.cpt_atts input[type="file"] { background:none; padding:0; border:none; margin:0.5em 0; color:#999; }
+.cpt_atts .sap-input-column label { padding:0; font-weight:normal; }
+.cpt_atts_submit { text-align:center; margin-top:0.5em; float:none; }
+.cpt_atts_submit .button-primary { float:right; margin:-0.3em 0 0 0; }
+.cpt_atts .sap-title-column { max-width:11em; }
+.cpt_atts.frame { display:none; }
+.sap-input-text input { display:block; width:97%; }
+.sap-input-textarea textarea { display:block; width:97%; height:10em; }
+.sap-input-location .latlong { float:left; width:100%; clear:both;  }
+.sap-input-location .latlong label { float:left; margin-right:1em; }
+.sap-input-location .location-search { margin-top:0.25em; }
+.sap-input-location .location-map { width:98%; height:20em; background:#ccc; border:1px solid #ccc; }
+.cpt_atts_delete { float:right; margin:0.3em 0 -10em -10em; }
+.cpt_atts .cpt_tools, .cpt_atts .cpt_tools td { margin:0; padding:0; margin-bottom:-100em; }
+.import-export textarea { width:100%; }
+.cpt_atts .frame { display:none; }
+.cpt_atts .dragthis { display:block; width:30px; height:30px; position:absolute; left:0; top:0; }
+.cpt_atts .dragthis:hover { cursor:move; }
+
+.cpt-choose-file { float:right; margin:0.7em 1em 0 1em; }
+.sap-file-tools { margin:0; }
+.sap-file-tools li { display:inline-block; float:left; }
+.sap-file-tools li a { padding:0.3em; }
+.sap-file-tools .choose { float:left; margin-top:0.6em; }
+.sap-file-tools .upload { float:left; }
+.sap-file-tools .upload label { display:inline; }
+.sap-file-tools .upload label strong { display:none; }
+.sap-file-tools .file-meta { width:100%; }
+.sap-file-tools .file-meta label { float:left; width:97%; clear:both; }
+.sap-file-tools .file-meta label strong { float:left; width:20%; }
+.sap-file-tools .file-meta label input { float:right; width:75%; }
+.sap-file-tools .remove { float:right; margin:0.6em 0 -10em -10em; }
+.sap-file-tools .remove a { color:#999; }
+.sap-file-tools .remove a:hover { color:red; }
+
+.cpt_atts input.searching { background:url('images/ajax-loading.gif') no-repeat 97% 50%; }
+
+.sap-post-search-results { max-height:20em; overflow:scroll; max-width:300px; z-index:20; background:#fff; border:1px solid #ccc; margin-top:0.5em; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; }
+.sap-post-search-results li { margin:0; padding:0.5em; border-top:1px solid #eee; }
+.sap-post-search-results small { font-size:inherit; color:#666; margin-right:0.5em; }
+.sap-post-search-results li:hover { background:#eee; }
+
+.sap-posts-list { max-width:500px; padding:0; margin:1em 0.5em; background:#fff; border:1px solid #ddd; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; }
+.sap-posts-list li { margin:0; padding:0.5em; border-top:1px solid #ddd; }
+.sap-posts-list li:first-child { border:none; }
+.sap-posts-list li a { float:right; color:#999; }
+
+.sap-input-taxonomy ul { max-height:20em; overflow:scroll; max-width:500px; margin:0.5em; padding:0; background:#fff; border:1px solid #ddd; border-radius:4px; -moz-border-radius:4px; -webkit-border-radius:4px; }
+.sap-input-taxonomy li ul { max-height:auto; overflow:none; max-width:auto; }
+.sap-input-taxonomy li { margin:0; padding:0.5em; border-top:1px solid #ddd; }
+.sap-input-taxonomy li:first-child { border:none; }
+
+/* 
+	SAP settings admin 
+*/
+#sap-atts li.groupframe { display:none; }
+#sap-atts li.frame { display:none; }
+#sap-atts { width:100%; max-width:600px; }
+#sap-atts .sap-delete-attr { float:right; visibility:hidden; margin-bottom:-10em; margin-top:0.5em; }
+#sap-atts li li:hover .sap-delete-attr { visibility:visible; }
+#sap-atts ul { float:left; clear:both; width:100%; margin:0; }
+#sap-atts .submit {  }
+#sap-atts .submit .button-primary { margin-left:1em; }
+#sap-atts input.sap-id { color:#999; }
+#sap-atts input.sap-id:focus { color:inherit; }
+#sap-atts li.sap-common-wrap { margin:0; border-top:thick solid #fff; padding:1em; background:#eee; }
+#sap-atts .advanced { padding-top:3em; clear:both; width:100%; }
+#sap-atts .advanced textarea { width:100%; font-family:monospace; }
+#sap-atts li { clear:both; display:block; }
+#sap-atts .sap-adv-type-options { display:none; margin-top:0.5em; }
+#sap-atts .sap-adv-type-options ul { margin-top:0.5em; }
+#sap-atts .sap-adv-type-options li { margin-left:2em; }
+#sap-atts .sap-adv-type-options h3 { float:left; margin:13px 0.5em 0 0; }
+#sap-atts .sap-attr-name { font-weight:bold; border-width:3px; }
+#sap-atts .sap-adv-type-options .add-adv-type-options { float:left; margin-top:10px; }
+.sap-common-options label { margin-right:0.5em; }
+.highlight { margin:0; display:block; height:5em; display:block; }
+#sap-atts .sap-label-help { color:#999; display:block; clear:both; padding-top:0.5em; }
+#sap-atts .sap-label-help input { background:transparent; margin-left:0.5em; width:85%; border:none; border-bottom:1px solid #ddd; }
+#sap-atts .group { border:1px solid #ccc; margin-bottom:2em; float:left; width:100%; clear:both; margin-left:-0.5em; -webkit-border-radius:4px; }
+#sap-atts .group:last-child { margin-bottom:1em; }
+#sap-atts .group .header { overflow:hidden; position:relative; border-bottom:1px solid #ccc; margin:0; padding:1em; }
+#sap-atts .group .header input { margin:0 0.5em 0 0.2em; }
+#sap-atts .add-attr-wrap { width:100%; float:left; text-align:center; display:block; clear:both; }
+#sap-atts .button-primary { float:right; margin-right:1em; }
+#sap-atts .add-attr { display:inline-block; }
+#sap-atts .remove-group { color:#999; float:left; margin-top:0.3em; margin-left:1em; }
+#sap-atts .remove-group:hover { color:red; }
+

@@ -47,10 +47,9 @@ add_action('admin_enqueue_scripts', 'spa_scripts_backend');
 
 function spa_scripts_backend() {
 	wp_enqueue_style( 'thickbox' );
-	wp_enqueue_style( 'simple-attributes-css', plugins_url( '/sap-admin.css', __FILE__) );
+	wp_enqueue_style( 'simple-attributes-css', plugins_url( '/spa-admin.css', __FILE__) );
 	wp_enqueue_script( 'google-maps-api', 'http://maps.google.com/maps/api/js?sensor=true' );
-	wp_enqueue_script( 'jquery-ui-map-full', plugins_url( '/scripts/jquery.ui.map.full.min.js', __FILE__ ), array('jquery', 'google-maps-api') );
-	wp_enqueue_script( 'simple-attributes-js-backend', plugins_url( '/scripts/spa-admin.js', __FILE__), array( 'jquery', 'jquery-ui-sortable', 'media-upload', 'jquery-ui-map-full' ) );
+	wp_enqueue_script( 'simple-attributes-js-backend', plugins_url( '/scripts/spa-admin.js', __FILE__), array( 'jquery', 'jquery-ui-sortable', 'media-upload' ) );
 }
 
 
@@ -58,8 +57,7 @@ add_action('wp_enqueue_scripts', 'spa_scripts_frontend');
 
 function spa_scripts_frontend() {
 	wp_enqueue_script( 'google-maps-api', 'http://maps.google.com/maps/api/js?sensor=true' );
-	wp_enqueue_script( 'jquery-ui-map-full', plugins_url( '/scripts/jquery.ui.map.full.min.js', __FILE__ ), array('jquery', 'google-maps-api') );
-	wp_enqueue_script( 'simple-attributes-js-frontend', plugins_url( '/scripts/spa-frontend.js', __FILE__), array( 'jquery', 'jquery-ui-map-full' ) );
+	wp_enqueue_script( 'simple-attributes-js-frontend', plugins_url( '/scripts/spa-frontend.js', __FILE__), array( 'jquery' ) );
 }
 
 
@@ -454,7 +452,7 @@ function cpt_metabox_input_name($items) {
 
 function cpt_atts_meta_box($post, $atts) {
 	$attr_values = get_post_meta($post->ID, 'cpt_atts', true);
-
+	
 	if (!is_array($attr_values))
 		$attr_values = array();	
 
@@ -1054,7 +1052,7 @@ function get_simple_attribute($id = false, $post_data = array()) {
 	} else if ( is_singular() ) {
 		$post_data = $post;
 	}
-	
+
 	$spa_settings = get_option('cpt_atts_' . $post->post_type);
 
 	if ( ! isset($post->ID) )
@@ -1078,8 +1076,10 @@ function get_simple_attribute($id = false, $post_data = array()) {
 		if ( isset( $cpt_atts[$group_id] ) && count( $cpt_atts[$group_id] ) > 1 )
 			$return['_value'] = array_values($cpt_atts[$group_id]);
 		else if ( isset( $cpt_atts[$group_id][0][$id] ) )
-			$return['_value'] = $cpt_atts[$group_id][0][$id]; // TODO
-
+			$return['_value'] = $cpt_atts[$group_id][0][$id];
+		else
+			$return['_value'] = $cpt_atts[$group_id];
+		
 		$return['_value_raw'] = $return['_value'];
 	} else {
 		$return = $spa_settings;
@@ -1090,7 +1090,7 @@ function get_simple_attribute($id = false, $post_data = array()) {
 }
 
 
-function spa_replace_template( $value, $args = array() ) {
+function spa_replace_template( $value, $args = array(), $replace = array() ) {
 	if ( empty( $value ) )
 		return;
 
@@ -1103,15 +1103,28 @@ function spa_replace_template( $value, $args = array() ) {
 			'%'. $value['_id'] .'_value%' => $value['_value'],
 		);
 
+	if ( is_array( $replace ) && ! empty( $replace ) )
+		$search_replace = $search_replace + $replace;
+
 	$template = '';
 
-	if ( isset( $args['template_' . $value['_id']] ) )
-		$template = $args['template_' . $value['_id']];	
+	if ( isset( $args['template_' . $value['_id'] . '_item'] ) && isset( $value['_is_item'] ) )
+		$template = $args['template_' . $value['_id'] . '_item'];
+
+	elseif ( isset( $args['template_' . $value['_id']] ) )
+		$template = $args['template_' . $value['_id']];
+	
+	elseif ( isset( $args['template'] ) )
+		$template = $args['template'];
+	
 	elseif ( isset( $args['template_default'] ) )
 		$template = $args['template_default'];
 
 	if ( $template )
-		return str_replace( array_keys( $search_replace ), array_values( $search_replace ), $template );
+		$value = str_replace( array_keys( $search_replace ), array_values( $search_replace ), $template );
+
+	if ( isset( $value['_is_item'] ) )
+		$value = preg_replace( '/%(.*?)%/', '', $value );
 
 	return $value;
 }
@@ -1127,7 +1140,7 @@ function spa_format_value_text( $value, $args ) {
 	// Convert special chars into HTML entities
 	$value['_value'] = wptexturize( $value['_value'] );
 	$args['template_default'] = '<span class="%id% spa-text">%value%</span>';
-
+	
 	return spa_replace_template( $value, $args );
 }
 
@@ -1152,9 +1165,13 @@ function spa_format_value_location($value, $args) {
 	if ( empty( $value['_value'] ) )
 		return;
 
+	if ( empty( $value['_value']['lat'] ) || empty( $value['_value']['lng'] ) )
+		return;
+
 	$geo_template = '<p class="geo"><abbr class="latitude" title="%1$f">%1$f</abbr> <abbr class="longitude" title="%2$f">%2$f</abbr></p>';
 	
 	$value['_value'] = sprintf( $geo_template, $value['_value']['lat'], $value['_value']['lng'] );
+
 	$args['template_default'] = '<div class="sap-location %id%"><div class="sap-location-map map"></div> %value%</div>';
 
 	return spa_replace_template( $value, $args );
@@ -1184,16 +1201,19 @@ add_filter('get_spa_value-checkboxes', 'spa_format_value_checkboxes', 10, 2);
 
 function spa_format_value_checkboxes($value, $args) {
 	if ( empty( $value['_value'] ) )
-		return;
+		$value['_value'] = array();
 
 	$checked_items = '';
-	$args['template_default'] = '<li class="spa-checkbox-item">%value%</li>';
-	
+
+	if ( ! isset( $args['template_' . $value['_id'] . '_item'] ) )
+		$args['template_' . $value['_id'] . '_item'] = '<li class="spa-checkbox-item">%value%</li>';
+
 	foreach ( $value['_value'] as $c => $checkbox_id ) {
 		$checkbox_value = array(
 				'_id' => $value['_id'],
 				'_value' => $value['freeform'][$checkbox_id]['name'],
-				'_label' => $value['freeform'][$checkbox_id]['name']
+				'_label' => $value['freeform'][$checkbox_id]['name'],
+				'_is_item' => true
 			);
 
 		$checked_items .= spa_replace_template( $checkbox_value, $args );
@@ -1241,6 +1261,17 @@ function spa_format_value_taxonomy($value, $args) {
 	return spa_replace_template( $value, $args );
 }
 
+// Format the posts output
+add_filter('get_spa_value-post', 'spa_format_value_post', 10, 2);
+
+function spa_format_value_post($value, $args) {
+	if ( empty( $value['_value'] ) )
+		return;
+
+	$args['template_default'] = '<span class="spa-checkbox-item">%value%</span>';
+
+	return spa_replace_template( $value, $args );
+}
 
 
 /*
@@ -1262,10 +1293,10 @@ function print_simple_attribute_value($id, $args = array()) {
 add_filter('get_spa_value', 'get_simple_attribute_value', 10, 2);
 
 function get_simple_attribute_value($id, $args = array()) {
-	if ( is_array( $id ) )
-		$value = $id;
-	else
-		$value = get_simple_attribute($id, $args);
+	if ( is_array( $id ) || empty( $id ) )
+		return;
+	
+	$value = get_simple_attribute( $id, $args );
 
 	return apply_filters( 'get_spa_value-' . $value['_type'], $value, $args );
 }
@@ -1297,7 +1328,6 @@ function spa_format_label($attr) {
 }
 
 
-/*
 
 // Can't use this reliably. Use apply_filters('get_spa_attribute') instead.
 add_action('spa_list', 'get_spa_list');
@@ -1339,55 +1369,42 @@ function get_spa_list($vars) {
 		if ( ! in_array( $group_id, $spa['in_group'] ) )
 			continue;
 
-		$group_html = '';
-		$is_repeatable = false;
-
-		if ( isset( $group_fields['multiple'] ) )
-			$is_repeatable = true;
+		$search_replace = array();
 
 		if ( ! isset( $spa['_value'][$group_id] ) || empty( $spa['_value'][$group_id] ) )
 			continue;
 
+		$item_value = '';
+
 		foreach ( $spa['_value'][$group_id] as $r => $rep_fields ) {
-			$repeatable_vars = $vars;
-			$repeatable_html = '';
+
+			$search_replace = array();
 
 			foreach ( $rep_fields as $rep_field_id => $rep_field_value ) {
 				$field_settings = $group_fields['atts'][$rep_field_id];
 				$field_settings['_value'] = $rep_field_value;
 
-				$item_html = apply_filters( 'get_spa_value', $field_settings, $repeatable_vars );
+				$item_html = apply_filters( 'get_spa_value', $field_settings, $vars );
 				
 				if ( ! is_string( $item_html ) )
 					continue;
 
-				if ( $is_repeatable ) {
-					$repeatable_html = $item_html;
-					$repeatable_vars['template'] = $repeatable_html;
-				} else {
-					$repeatable_html .= $item_html;
-				}
+				$search_replace['%' . $rep_field_id . '%'] = $item_html;
 			}
 
-			$group_html .= $repeatable_html;
+			if ( ! isset( $vars['template_' . $group_id . '_item'] ) )
+				$vars['template_' . $group_id . '_item'] = '%value%';
+
+			$item_value .= spa_replace_template( array( '_id' => $group_id, '_is_item' => true ) , $vars, $search_replace );
+
 		}
+		
+		if ( ! isset( $vars['template_' . $group_id] ) )
+			$vars['template_' . $group_id] = '%value%';
 
-		if ( isset( $vars['template_' . $group_id] ) ) {
-			$group_settings = array(
-								'_id' => $group_id,
-								'_value' => $group_html 
-							);
-
-			$group_html = spa_replace_template( $group_settings , $vars );
-		}
-
-		$return .= $group_html;
+		$return .= spa_replace_template( array( '_id' => $group_id, '_value' => $item_value ) , $vars, $search_replace );
 	}
 
 	echo $return;
 }
-*/
-
-
-
 
