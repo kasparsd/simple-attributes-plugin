@@ -218,6 +218,7 @@ jQuery(document).ready(function($) {
 		Location / map
 	*/
 
+	/*
 	$('.location-map').gmap().bind('init', function(ev, map) {
 		var $thismap = this;
 		var $map_options = {
@@ -237,6 +238,7 @@ jQuery(document).ready(function($) {
 			$('.lng', $($thismap).siblings('.latlong')).val( event.latLng.lng() );
 		});
 	});
+	*/
 
 });
 
