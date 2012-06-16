@@ -2,21 +2,27 @@ jQuery(document).ready(function($) {
 	/*
 		Location / map
 	*/
-
-	$('.sap-location-map').gmap().bind('init', function(ev, map) {
-		var $thismap = this;
-		var $map_options = {}
-
-		var $lat = $('.latitude', $(this).siblings('.geo')).attr('title');
-		var $lng = $('.longitude', $(this).siblings('.geo')).attr('title');
-
-		if ( $lat && $lng ) {
-			var $pos = new google.maps.LatLng($lat, $lng);
-			$.extend($map_options, { position: $pos, center: $pos });
+	
+	$('.sap-location').each(function() {
+		var $location = this;
+		var $lat = $( '.latitude', this ).attr('title');
+		var $lng = $( '.longitude', this ).attr('title');
+		
+		var $latlng = new google.maps.LatLng($lat, $lng);
+		var $map_options = {
+				zoom: 10,
+				center: $latlng,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+			};
+		
+		if ( $( '.map', $location ).size() ) {
+			var $map = new google.maps.Map( $( '.map', $location )[0], $map_options );
+			var $marker = new google.maps.Marker({
+					map: $map,
+					position: $latlng
+				});
 		}
-
-		console.log($map_options);
 	});
-
+	
 });
 
